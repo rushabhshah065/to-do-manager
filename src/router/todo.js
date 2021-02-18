@@ -49,4 +49,72 @@ router.post('/todo', async (req, res) => {
 })
 
 
+router.put('/todo/:id', async (req, res) => {
+
+    const _id = req.params.id
+    const {
+        name,
+        description
+    } = req.body
+
+    if (!_id) {
+        return res.status(400).send({
+            error: "For updte to do id is required!"
+        })
+    }
+
+    if (!(name || description)) {
+        return res.status(400).send({
+            error: "For update to do name or description required!"
+        })
+    }
+
+    try {
+        await Task.updateOne({
+            _id
+        }, {
+            ...(name ? {
+                name
+            } : {}),
+            ...(description ? {
+                description
+            } : {})
+        })
+        return res.status(200).send("Task updated!")
+    } catch (error) {
+        res.status(500).send({
+            error: "TO-DO task are not updated due to an error!"
+        })
+    }
+
+})
+
+
+router.delete('/todo/:id', async (req, res) => {
+
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.status(400).send({
+            error: "For delete to do id is required!"
+        })
+    }
+
+    try {
+
+        await Task.deleteOne({
+            _id
+        })
+        return res.status(200).send({
+            error: "Task deleted success!"
+        })
+    } catch (error) {
+        res.status(500).send({
+            error: "TO-DO task are not deleted due to an error!"
+        })
+    }
+
+})
+
+
 module.exports = router
