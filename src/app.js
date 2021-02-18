@@ -3,6 +3,8 @@ const express = require('express')
 
 // define app variable
 const app = express()
+app.use(express.json())
+
 
 
 app.get('*',(req,res) => {
